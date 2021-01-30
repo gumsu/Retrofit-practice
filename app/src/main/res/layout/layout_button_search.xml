@@ -3,7 +3,7 @@
     android:id="@+id/frame_search_btn"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:visibility="invisible">
+    android:visibility="visible">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_search"

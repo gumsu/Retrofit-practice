@@ -2,6 +2,7 @@ package com.gdh.retrofit_practice
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -60,5 +61,22 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "검색어는 12자까지만 입력 가능합니다.", Toast.LENGTH_SHORT).show()
             }
         }
+
+        btn_search.setOnClickListener {
+            Log.d(TAG, "MainActivity - 검색 버튼이 클릭되었다. / currentSearchType : $currentSearchType")
+
+            this.handleSearchButtonUi()
+        }
+    } // onCreate
+
+    private fun handleSearchButtonUi(){
+        btn_progress.visibility = View.INVISIBLE
+
+        btn_search.text = ""
+
+        Handler().postDelayed({
+            btn_progress.visibility = View.INVISIBLE
+            btn_search.text = "검색"
+        }, 1500)
     }
 }
