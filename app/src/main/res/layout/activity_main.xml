@@ -50,6 +50,7 @@
             app:boxStrokeColor="@color/design_default_color_primary"
             app:counterEnabled="true"
             app:counterMaxLength="12"
+            app:endIconMode="clear_text"
             app:helperText="검색어를 입력해주세요"
             app:shapeAppearance="@style/ShapeAppearance.MaterialComponents.MediumComponent"
             app:startIconDrawable="@drawable/ic_baseline_photo_library_24">
