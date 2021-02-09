@@ -1,15 +1,19 @@
 package com.gdh.retrofit_practice.retrofit
 
 import android.util.Log
+import com.gdh.retrofit_practice.utils.API
 import com.gdh.retrofit_practice.utils.Constants.TAG
 import com.gdh.retrofit_practice.utils.isJsonArray
 import com.gdh.retrofit_practice.utils.isJsonObject
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.Exception
+import java.util.concurrent.TimeUnit
 
 // 싱글턴
 object RetrofitClient {
@@ -49,6 +53,32 @@ object RetrofitClient {
 
         // 위에서 설정한 로깅 인터셉터를 okhttp 클라이언트에 추가
         client.addInterceptor(loggingInterceptor)
+
+        // 기본 파라미터 인터셉터 설정
+        val baseParameterInterceptor: Interceptor = (object : Interceptor{
+            override fun intercept(chain: Interceptor.Chain): Response {
+                Log.d(TAG, "RetrofitClient - intercept() called ")
+                // 오리지날 리퀘스트
+                val originalRequest = chain.request()
+
+                // ?.client_id=sdfadfdfj
+                // 쿼리 파라미터 추가하기
+                val addedUrl = originalRequest.url.newBuilder().addQueryParameter("client_id", API.CLIENT_ID).build()
+
+                val finalRequest = originalRequest.newBuilder().url(addedUrl).method(originalRequest.method, originalRequest.body).build()
+
+                return chain.proceed(finalRequest)
+            }
+        })
+
+        // 위에서 설정한 기본 파라미터 인터셉터를 okhhtp 클라이언트에 추가한다.
+        client.addInterceptor(baseParameterInterceptor)
+
+        // 커넥션 타임아웃
+        client.connectTimeout(10, TimeUnit.SECONDS)
+        client.readTimeout(10, TimeUnit.SECONDS)
+        client.writeTimeout(10, TimeUnit.SECONDS)
+        client.retryOnConnectionFailure(true)
 
         if(retrofitClient == null){
 
