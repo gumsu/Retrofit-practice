@@ -29,6 +29,8 @@ class PhotoCollectionActivity: AppCompatActivity() {
 
         Log.d(TAG, "PhotoCollectionActivity - onCreat() called / searchTerm : $searchTerm, photoList.count() : ${photoList.count()} ")
 
+        top_app_bar.title = searchTerm.toString()
+
         this.photoGridRecyclerViewAdapter = PhotoGridRecyclerViewAdapter()
         this.photoGridRecyclerViewAdapter.submitList(photoList)
 
