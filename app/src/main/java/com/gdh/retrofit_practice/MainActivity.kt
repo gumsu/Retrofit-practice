@@ -1,5 +1,6 @@
 package com.gdh.retrofit_practice
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
@@ -68,15 +69,23 @@ class MainActivity : AppCompatActivity() {
         btn_search.setOnClickListener {
             Log.d(TAG, "MainActivity - 검색 버튼이 클릭되었다. / currentSearchType : $currentSearchType")
 
+            val userSearchInput = search_term_edit_text.text.toString()
+
             // 검색 api 호출
-            RetrofitManager.instance.searchPhotos(searchTerm = search_term_edit_text.text.toString(), completion = { responseState, responseBody ->
+            RetrofitManager.instance.searchPhotos(searchTerm = search_term_edit_text.text.toString(), completion = { responseState, responseDataArrayList ->
                 when (responseState) {
                     RESPONSE_STATE.OKAY -> {
-                        Log.d(TAG, "api 호출 성공: ${responseBody?.size}")
+                        Log.d(TAG, "api 호출 성공: ${responseDataArrayList?.size}")
+                        val intent = Intent(this, PhotoCollectionActivity::class.java)
+                        val bundle = Bundle()
+                        bundle.putSerializable("photo_array_list", responseDataArrayList)
+                        intent.putExtra("array_bundle", bundle)
+                        intent.putExtra("search_term", userSearchInput)
+                        startActivity(intent)
                     }
                     RESPONSE_STATE.FAIL -> {
                         Toast.makeText(this, "api 호출 에러입니다.", Toast.LENGTH_SHORT).show()
-                        Log.d(TAG, "api 호출 실패: $responseBody")
+                        Log.d(TAG, "api 호출 실패: $responseDataArrayList")
                     }
                 }
             })
