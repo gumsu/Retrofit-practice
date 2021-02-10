@@ -4,7 +4,7 @@ import android.util.Log
 import com.gdh.retrofit_practice.model.Photo
 import com.gdh.retrofit_practice.utils.API
 import com.gdh.retrofit_practice.utils.Constants.TAG
-import com.gdh.retrofit_practice.utils.RESPONSE_STATE
+import com.gdh.retrofit_practice.utils.RESPONSE_STATUS
 import com.google.gson.JsonElement
 import retrofit2.Call
 import retrofit2.Response
@@ -20,7 +20,7 @@ class RetrofitManager {
     private val iRetrofit: IRetrofit? = RetrofitClient.getClient(API.BASE_URL)?.create(IRetrofit::class.java)
 
     // 사진 검색 api 호출
-    fun searchPhotos(searchTerm: String?, completion: (RESPONSE_STATE, ArrayList<Photo>?) -> Unit){
+    fun searchPhotos(searchTerm: String?, completion: (RESPONSE_STATUS, ArrayList<Photo>?) -> Unit){
 
         // val term = searchTerm ?: ""
         val term: String = searchTerm.let {
@@ -51,26 +51,31 @@ class RetrofitManager {
 
                             Log.d(TAG, "RetrofitManager - onResponse() called / total: $total")
 
-                            results.forEach { resultItem ->
-                                val resultItemObject = resultItem.asJsonObject
+                            // 데이터가 없으면 no_content로 보낸다.
+                            if(total == 0){
+                                completion(RESPONSE_STATUS.NO_CONTENT, null)
+                            }else{ // 데이터가 있다면
+                                results.forEach { resultItem ->
+                                    val resultItemObject = resultItem.asJsonObject
 
-                                val user = resultItemObject.get("user").asJsonObject
-                                val username: String = user.get("username").asString
-                                val likesCount = resultItemObject.get("likes").asInt
-                                val thumbnailLink = resultItemObject.get("urls").asJsonObject.get("thumb").asString
-                                val createdAt = resultItemObject.get("created_at").asString
+                                    val user = resultItemObject.get("user").asJsonObject
+                                    val username: String = user.get("username").asString
+                                    val likesCount = resultItemObject.get("likes").asInt
+                                    val thumbnailLink = resultItemObject.get("urls").asJsonObject.get("thumb").asString
+                                    val createdAt = resultItemObject.get("created_at").asString
 
-                                val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                                val formatter = SimpleDateFormat("yyyy년\nMM월 dd일")
-                                val outputDateString = formatter.format(parser.parse(createdAt))
-//                                Log.d(TAG, "RetrofitManager - outputDataString: $outputDateString")
+                                    val parser = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                                    val formatter = SimpleDateFormat("yyyy년\nMM월 dd일")
+                                    val outputDateString = formatter.format(parser.parse(createdAt))
+    //                                Log.d(TAG, "RetrofitManager - outputDataString: $outputDateString")
 
-                                val photoItem = Photo(author = username, likesCount = likesCount, thumnail = thumbnailLink, createdAt = outputDateString)
+                                    val photoItem = Photo(author = username, likesCount = likesCount, thumnail = thumbnailLink, createdAt = outputDateString)
 
-                                parsedPhotoDataArray.add(photoItem)
+                                    parsedPhotoDataArray.add(photoItem)
+                                }
+
+                                completion(RESPONSE_STATUS.OKAY, parsedPhotoDataArray)
                             }
-
-                            completion(RESPONSE_STATE.OKAY, parsedPhotoDataArray)
                         }
                     }
                 }
@@ -79,7 +84,7 @@ class RetrofitManager {
             // 응답 실패 시
             override fun onFailure(call: Call<JsonElement>, t: Throwable) {
                 Log.d(TAG, "RetrofitManager - onFailure() called / t: $t ")
-                completion(RESPONSE_STATE.FAIL, null)
+                completion(RESPONSE_STATUS.FAIL, null)
 
             }
         })
