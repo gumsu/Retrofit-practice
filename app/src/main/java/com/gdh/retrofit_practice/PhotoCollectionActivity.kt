@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.text.InputFilter
 import android.util.Log
 import android.view.Menu
+import android.view.View
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -72,9 +73,11 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
                 when(hasExpanded){
                     true -> {
                         Log.d(TAG, "onCreateOptionsMenu: 서치뷰 열림")
+                        linear_search_history_view.visibility = View.VISIBLE
                     }
                     false -> {
                         Log.d(TAG, "onCreateOptionsMenu: 서치뷰 닫힘")
+                        linear_search_history_view.visibility = View.INVISIBLE
                     }
                 }
             }
