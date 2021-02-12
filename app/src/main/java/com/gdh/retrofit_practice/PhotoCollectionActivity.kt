@@ -8,6 +8,7 @@ import android.text.InputFilter
 import android.util.Log
 import android.view.Menu
 import android.view.View
+import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +19,7 @@ import com.gdh.retrofit_practice.recyclerview.PhotoGridRecyclerViewAdapter
 import com.gdh.retrofit_practice.utils.Constants.TAG
 import kotlinx.android.synthetic.main.activity_photo_collection.*
 
-class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListener {
+class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener{
 
     // 데이터
     var photoList = ArrayList<Photo>()
@@ -43,6 +44,9 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
         photoList = bundle?.getSerializable("photo_array_list") as ArrayList<Photo>
 
         Log.d(TAG, "PhotoCollectionActivity - onCreat() called / searchTerm : $searchTerm, photoList.count() : ${photoList.count()} ")
+
+        search_history_mode_switch.setOnCheckedChangeListener(this)
+        clear_search_history_button.setOnClickListener(this)
 
         top_app_bar.title = searchTerm.toString()
 
@@ -122,5 +126,25 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
             Toast.makeText(this, "검색어는 12자까지만 입력가능합니다.", Toast.LENGTH_SHORT).show()
         }
         return true
+    }
+
+    override fun onCheckedChanged(switch: CompoundButton?, isChecked: Boolean) {
+        when(switch){
+            search_history_mode_switch -> {
+                if (isChecked == true) {
+                    Log.d(TAG, "onCheckedChanged: 검색어 저장 기능 ON")
+                } else {
+                    Log.d(TAG, "onCheckedChanged: 검색어 저장 기능 OFF")
+                }
+            }
+        }
+    }
+
+    override fun onClick(view: View?) {
+        when(view){
+            clear_search_history_button -> {
+                Log.d(TAG, "onClick: 검색 기록 삭제 버튼이 클릭되었다.")
+            }
+        }
     }
 }
