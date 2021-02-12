@@ -100,7 +100,7 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
             //TODO:: api 호출
             //TODO:: 검색어 저장장
         }
-/        this.mySearchView.setQuery("", false)
+//        this.mySearchView.setQuery("", false)
 //        this.mySearchView.clearFocus()
         this.top_app_bar.collapseActionView()
 

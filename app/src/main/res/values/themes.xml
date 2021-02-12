@@ -21,4 +21,10 @@
         <item name="colorPrimaryVariant">#C72A5F</item>
         <item name="colorOnPrimary">#FFEE58</item>
     </style>
+
+    <style name="MyRadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="colorControlNormal">@color/lightGray</item>
+        <item name="colorControlActivated">#C72A5F</item>
+        <item name="colorControlHighlight">@color/lightPink</item>
+    </style>
 </resources>
