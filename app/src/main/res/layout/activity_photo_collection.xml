@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:menu="@menu/top_app_bar"
+            app:menu="@menu/top_app_bar_menu"
             app:navigationIcon="@drawable/ic_baseline_menu_24"
             app:title="사진검색" />
     </com.google.android.material.appbar.AppBarLayout>
