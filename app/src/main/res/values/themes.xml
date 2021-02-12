@@ -27,4 +27,9 @@
         <item name="colorControlActivated">#C72A5F</item>
         <item name="colorControlHighlight">@color/lightPink</item>
     </style>
+
+    <style name="MySwitchButton" parent="">
+        <item name="colorSwitchThumbNormal">@color/lightGray</item>
+        <item name="colorControlActivated">#C72A5F</item>
+    </style>
 </resources>
