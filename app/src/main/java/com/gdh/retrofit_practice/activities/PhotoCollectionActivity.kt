@@ -14,10 +14,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.gdh.retrofit_practice.R
 import com.gdh.retrofit_practice.model.Photo
 import com.gdh.retrofit_practice.model.SearchData
 import com.gdh.retrofit_practice.recyclerview.PhotoGridRecyclerViewAdapter
+import com.gdh.retrofit_practice.recyclerview.SearchHistoryRecyclerViewAdapter
 import com.gdh.retrofit_practice.utils.Constants.TAG
 import com.gdh.retrofit_practice.utils.SharedPrefManager
 import kotlinx.android.synthetic.main.activity_photo_collection.*
@@ -33,7 +35,9 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
     private var searchHistoryList = ArrayList<SearchData>()
 
     // 어댑터
+    // lateinit을 통해 나중에 메모리에 올라가도 된다.
     private lateinit var photoGridRecyclerViewAdapter: PhotoGridRecyclerViewAdapter
+    private lateinit var mySearchHistoryRecyclerViewAdapter: SearchHistoryRecyclerViewAdapter
 
     // 서치뷰
     private lateinit var mySearchView: SearchView
@@ -49,7 +53,6 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
 
         val bundle = intent.getBundleExtra("array_bundle")
         val searchTerm = intent.getStringExtra("search_term")
-        photoList = bundle?.getSerializable("photo_array_list") as ArrayList<Photo>
 
         Log.d(TAG, "PhotoCollectionActivity - onCreat() called / searchTerm : $searchTerm, photoList.count() : ${photoList.count()} ")
 
@@ -61,11 +64,10 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
         // 액티비티에서 어떤 액션바를 사용할 지 설정한다.
         setSupportActionBar(top_app_bar)
 
-        this.photoGridRecyclerViewAdapter = PhotoGridRecyclerViewAdapter()
-        this.photoGridRecyclerViewAdapter.submitList(photoList)
+        photoList = bundle?.getSerializable("photo_array_list") as ArrayList<Photo>
 
-        my_photo_recycler_view.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
-        my_photo_recycler_view.adapter = this.photoGridRecyclerViewAdapter
+        // 사진 리싸이클러뷰 세팅
+        this.photoCollectionRecyclerViewSetting(this.photoList)
 
         // 저장된 검색 기록 가져오기
         this.searchHistoryList = SharedPrefManager.getSearchHistoryList() as ArrayList<SearchData>
@@ -73,6 +75,36 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
         this.searchHistoryList.forEach {
             Log.d(TAG, "저장된 검색 기록 - it.term : ${it.term}, it.timestamp: ${it.timestamp} ")
         }
+
+        // 검색 기록 리싸이클러뷰 준비
+        this.searchHistoryRecyclerViewSetting(this.searchHistoryList)
+    }
+
+    // 검색 기록 리싸이클러뷰 준비
+   private fun searchHistoryRecyclerViewSetting(searchHistoryList: ArrayList<SearchData>){
+        Log.d(TAG, "PhotoCollectionActivity - searchHistoryRecyclerViewSetting() called ")
+
+        this.mySearchHistoryRecyclerViewAdapter = SearchHistoryRecyclerViewAdapter()
+        this.mySearchHistoryRecyclerViewAdapter.submitList(searchHistoryList)
+
+        val myLinearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
+        myLinearLayoutManager.stackFromEnd = true
+
+        search_history_recycler_view.apply {
+            layoutManager = myLinearLayoutManager
+            this.scrollToPosition(mySearchHistoryRecyclerViewAdapter.itemCount - 1)
+            adapter = mySearchHistoryRecyclerViewAdapter
+        }
+    }
+    // 그리드 사진 리싸이클러뷰 준비
+   private fun photoCollectionRecyclerViewSetting(photoList: ArrayList<Photo>){
+        Log.d(TAG, "PhotoCollectionActivity - photoCollectionRecyclerViewSetting() called ")
+
+        this.photoGridRecyclerViewAdapter = PhotoGridRecyclerViewAdapter()
+        this.photoGridRecyclerViewAdapter.submitList(photoList)
+
+        my_photo_recycler_view.layoutManager = GridLayoutManager(this, 2, GridLayoutManager.VERTICAL, false)
+        my_photo_recycler_view.adapter = this.photoGridRecyclerViewAdapter
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
