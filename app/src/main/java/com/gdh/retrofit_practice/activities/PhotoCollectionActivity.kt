@@ -1,4 +1,4 @@
-package com.gdh.retrofit_practice
+package com.gdh.retrofit_practice.activities
 
 import android.app.SearchManager
 import android.content.Context
@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.GridLayoutManager
+import com.gdh.retrofit_practice.R
 import com.gdh.retrofit_practice.model.Photo
 import com.gdh.retrofit_practice.recyclerview.PhotoGridRecyclerViewAdapter
 import com.gdh.retrofit_practice.utils.Constants.TAG
