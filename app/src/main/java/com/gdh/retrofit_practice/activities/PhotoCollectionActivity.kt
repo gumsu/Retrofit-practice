@@ -22,6 +22,7 @@ import com.gdh.retrofit_practice.recyclerview.PhotoGridRecyclerViewAdapter
 import com.gdh.retrofit_practice.recyclerview.SearchHistoryRecyclerViewAdapter
 import com.gdh.retrofit_practice.utils.Constants.TAG
 import com.gdh.retrofit_practice.utils.SharedPrefManager
+import com.gdh.retrofit_practice.utils.toSimpleString
 import kotlinx.android.synthetic.main.activity_photo_collection.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -154,7 +155,7 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
             //TODO:: api 호출
             //TODO:: 검색어 저장
 
-            val newSearchData = SearchData(term = query, timestamp = Date().toString())
+            val newSearchData = SearchData(term = query, timestamp = Date().toSimpleString())
             this.searchHistoryList.add(newSearchData)
 
             SharedPrefManager.storeSearchHistoryList(this.searchHistoryList)
