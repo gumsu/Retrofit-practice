@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.gdh.retrofit_practice.R
 import com.gdh.retrofit_practice.model.Photo
 import com.gdh.retrofit_practice.model.SearchData
+import com.gdh.retrofit_practice.recyclerview.ISearchHistoryRecyclerView
 import com.gdh.retrofit_practice.recyclerview.PhotoGridRecyclerViewAdapter
 import com.gdh.retrofit_practice.recyclerview.SearchHistoryRecyclerViewAdapter
 import com.gdh.retrofit_practice.utils.Constants.TAG
@@ -27,7 +28,8 @@ import kotlinx.android.synthetic.main.activity_photo_collection.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener{
+class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListener, CompoundButton.OnCheckedChangeListener, View.OnClickListener,
+    ISearchHistoryRecyclerView{
 
     // 데이터
     var photoList = ArrayList<Photo>()
@@ -199,5 +201,18 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
                 Log.d(TAG, "onClick: 검색 기록 삭제 버튼이 클릭되었다.")
             }
         }
+    }
+
+    // 검색 아이템 삭제 버튼 이벤트
+    override fun onSearchItemDeleteClicked(position: Int) {
+        Log.d(TAG, "PhotoCollectionActivity - onSearchItemDeleteClicked() called ")
+        //TODO:: 해당 번째 아이템을 삭제
+        //TODO:: 다시 저장
+    }
+
+    // 검색 아이템 버튼 이벤트
+    override fun onSearchItemClicked(position: Int) {
+        Log.d(TAG, "PhotoCollectionActivity - onSearchItemClicked() called ")
+        //TODO:: 해당 번째 아이템의 검색어로 API 호출
     }
 }
