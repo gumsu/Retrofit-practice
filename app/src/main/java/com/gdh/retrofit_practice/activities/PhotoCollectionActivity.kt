@@ -64,6 +64,8 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
         search_history_mode_switch.setOnCheckedChangeListener(this)
         clear_search_history_button.setOnClickListener(this)
 
+        search_history_mode_switch.isChecked = SharedPrefManager.checkSearchHistoryMode()
+
         top_app_bar.title = searchTerm.toString()
 
         // 액티비티에서 어떤 액션바를 사용할 지 설정한다.
@@ -85,6 +87,13 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
 
         // 검색 기록 리싸이클러뷰 준비
         this.searchHistoryRecyclerViewSetting(this.searchHistoryList)
+
+        if (searchTerm!!.isNotEmpty()){
+            val term = searchTerm?.let {
+                it
+            }?: ""
+            this.insertSearchTermHistory(term)
+        }
     }
 
     // 검색 기록 리싸이클러뷰 준비
@@ -162,10 +171,8 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
             //TODO:: api 호출
             //TODO:: 검색어 저장
 
-            val newSearchData = SearchData(term = query, timestamp = Date().toSimpleString())
-            this.searchHistoryList.add(newSearchData)
-
-            SharedPrefManager.storeSearchHistoryList(this.searchHistoryList)
+            this.insertSearchTermHistory(query)
+            this.searchPhotoApiCall(query)
         }
 //        this.mySearchView.setQuery("", false)
 //        this.mySearchView.clearFocus()
@@ -193,8 +200,10 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
             search_history_mode_switch -> {
                 if (isChecked == true) {
                     Log.d(TAG, "onCheckedChanged: 검색어 저장 기능 ON")
+                    SharedPrefManager.setSearchHistoryMode(isActivated = true)
                 } else {
                     Log.d(TAG, "onCheckedChanged: 검색어 저장 기능 OFF")
+                    SharedPrefManager.setSearchHistoryMode(isActivated = false)
                 }
             }
         }
@@ -234,6 +243,8 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
         searchPhotoApiCall(queryString)
         top_app_bar.title = queryString
 
+        this.insertSearchTermHistory(searchTerm = queryString)
+        this.top_app_bar.collapseActionView()
     }
     
     // 사진 검색 API 호출
@@ -268,6 +279,34 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
             search_history_recycler_view.visibility = View.INVISIBLE
             search_history_recycler_view_label.visibility = View.INVISIBLE
             clear_search_history_button.visibility = View.INVISIBLE
+        }
+    }
+    
+    // 검색어 저장
+    private fun insertSearchTermHistory(searchTerm: String){
+        Log.d(TAG, "PhotoCollectionActivity - insertSearchTermHistory() called")
+
+        if (SharedPrefManager.checkSearchHistoryMode() == true){
+
+            // 중복 아이템 삭제
+           var indexListToRemove = ArrayList<Int>()
+
+            this.searchHistoryList.forEachIndexed{ index, searchDataItem ->
+                if (searchDataItem.term == searchTerm){
+                    Log.d(TAG, "index: $index")
+                    indexListToRemove.add(index)
+                }
+                indexListToRemove.forEach {
+                    this.searchHistoryList.removeAt(it)
+                }
+                // 새 아이템 넣기
+                val newSearchData = SearchData(term = searchTerm, timestamp = Date().toSimpleString())
+                this.searchHistoryList.add(newSearchData)
+
+                // 기존 데이터에 덮어쓰기
+                SharedPrefManager.storeSearchHistoryList(this.searchHistoryList)
+                this.mySearchHistoryRecyclerViewAdapter.notifyDataSetChanged()
+            }
         }
     }
 }
