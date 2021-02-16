@@ -21,7 +21,9 @@ import com.gdh.retrofit_practice.model.SearchData
 import com.gdh.retrofit_practice.recyclerview.ISearchHistoryRecyclerView
 import com.gdh.retrofit_practice.recyclerview.PhotoGridRecyclerViewAdapter
 import com.gdh.retrofit_practice.recyclerview.SearchHistoryRecyclerViewAdapter
+import com.gdh.retrofit_practice.retrofit.RetrofitManager
 import com.gdh.retrofit_practice.utils.Constants.TAG
+import com.gdh.retrofit_practice.utils.RESPONSE_STATUS
 import com.gdh.retrofit_practice.utils.SharedPrefManager
 import com.gdh.retrofit_practice.utils.toSimpleString
 import kotlinx.android.synthetic.main.activity_photo_collection.*
@@ -218,5 +220,31 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
     override fun onSearchItemClicked(position: Int) {
         Log.d(TAG, "PhotoCollectionActivity - onSearchItemClicked() called / position: $position")
         //TODO:: 해당 번째 아이템의 검색어로 API 호출
+
+        val queryString = this.searchHistoryList[position].term
+        searchPhotoApiCall(queryString)
+        top_app_bar.title = queryString
+
+    }
+    
+    // 사진 검색 API 호출
+    private fun searchPhotoApiCall(query: String){
+        RetrofitManager.instance.searchPhotos(searchTerm = query, completion = { status, list ->
+            when (status) {
+                RESPONSE_STATUS.OKAY -> {
+                    Log.d(TAG, "PhotoCollectionActivity - searchPhotoApiCall() called 응답 성공 / list.size :${list?.size}")
+
+                    if (list != null){
+                        this.photoList.clear()
+                        this.photoList = list
+                        this.photoGridRecyclerViewAdapter.submitList(this.photoList)
+                        this.photoGridRecyclerViewAdapter.notifyDataSetChanged()
+                    }
+                }
+                RESPONSE_STATUS.NO_CONTENT -> {
+                    Toast.makeText(this, "$query 에 대한 검색 결과가 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 }
