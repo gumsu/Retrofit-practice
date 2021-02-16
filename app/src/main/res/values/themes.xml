@@ -20,5 +20,17 @@
         <item name="colorPrimary">#EC407A</item>
         <item name="colorPrimaryVariant">#C72A5F</item>
         <item name="colorOnPrimary">#FFEE58</item>
+        <item name="colorControlHighlight">#EC407A</item>
+    </style>
+
+    <style name="MyRadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="colorControlNormal">@color/lightGray</item>
+        <item name="colorControlActivated">#C72A5F</item>
+        <item name="colorControlHighlight">@color/lightPink</item>
+    </style>
+
+    <style name="MySwitchButton" parent="">
+        <item name="colorSwitchThumbNormal">@color/lightGray</item>
+        <item name="colorControlActivated">#C72A5F</item>
     </style>
 </resources>

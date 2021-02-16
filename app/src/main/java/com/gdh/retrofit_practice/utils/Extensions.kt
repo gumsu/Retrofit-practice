@@ -3,6 +3,8 @@ package com.gdh.retrofit_practice.utils
 import android.widget.EditText
 import android.text.Editable
 import android.text.TextWatcher
+import java.text.SimpleDateFormat
+import java.util.*
 
 // 문자열이 json 형태인지
 fun String?.isJsonObject(): Boolean {
@@ -21,6 +23,12 @@ fun String?.isJsonArray(): Boolean {
     } else{
         return false
     }
+}
+
+// 날짜 포맷
+fun Date.toSimpleString() : String{
+    val format = SimpleDateFormat("HH:mm:ss")
+    return format.format(this)
 }
 
 // editText에 대한 extension

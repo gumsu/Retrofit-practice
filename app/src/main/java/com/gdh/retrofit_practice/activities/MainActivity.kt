@@ -1,12 +1,12 @@
-package com.gdh.retrofit_practice
+package com.gdh.retrofit_practice.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.gdh.retrofit_practice.R
 import com.gdh.retrofit_practice.retrofit.RetrofitManager
 import com.gdh.retrofit_practice.utils.Constants.TAG
 import com.gdh.retrofit_practice.utils.RESPONSE_STATUS
