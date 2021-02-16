@@ -81,6 +81,8 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
             Log.d(TAG, "저장된 검색 기록 - it.term : ${it.term}, it.timestamp: ${it.timestamp} ")
         }
 
+        handleSearchViewUi()
+
         // 검색 기록 리싸이클러뷰 준비
         this.searchHistoryRecyclerViewSetting(this.searchHistoryList)
     }
@@ -130,6 +132,7 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
                     true -> {
                         Log.d(TAG, "onCreateOptionsMenu: 서치뷰 열림")
                         linear_search_history_view.visibility = View.VISIBLE
+                        handleSearchViewUi()
                     }
                     false -> {
                         Log.d(TAG, "onCreateOptionsMenu: 서치뷰 닫힘")
@@ -201,6 +204,10 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
         when(view){
             clear_search_history_button -> {
                 Log.d(TAG, "onClick: 검색 기록 삭제 버튼이 클릭되었다.")
+                SharedPrefManager.clearSearchHistoryList()
+                this.searchHistoryList.clear()
+                // ui 처리
+                handleSearchViewUi()
             }
         }
     }
@@ -214,6 +221,8 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
         SharedPrefManager.storeSearchHistoryList(this.searchHistoryList)
         // 데이터 변경 됐다고 알려준다.
         this.mySearchHistoryRecyclerViewAdapter.notifyDataSetChanged()
+
+        handleSearchViewUi()
     }
 
     // 검색 아이템 버튼 이벤트
@@ -246,5 +255,19 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
                 }
             }
         })
+    }
+    
+    private fun handleSearchViewUi(){
+        Log.d(TAG, "PhotoCollectionActivity - handleSearchViewUi() called / size: ${this.searchHistoryList.size}")
+
+        if (this.searchHistoryList.size > 0) {
+            search_history_recycler_view.visibility = View.VISIBLE
+            search_history_recycler_view_label.visibility = View.VISIBLE
+            clear_search_history_button.visibility = View.VISIBLE
+        } else {
+            search_history_recycler_view.visibility = View.INVISIBLE
+            search_history_recycler_view_label.visibility = View.INVISIBLE
+            clear_search_history_button.visibility = View.INVISIBLE
+        }
     }
 }
