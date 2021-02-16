@@ -7,7 +7,9 @@ import com.gdh.retrofit_practice.model.SearchData
 import com.gdh.retrofit_practice.utils.Constants.TAG
 import kotlinx.android.synthetic.main.layout_search_item.view.*
 
-class SearchItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), View.OnClickListener {
+class SearchItemViewHolder(itemView: View, searchRecyclerViewInterface: ISearchHistoryRecyclerView): RecyclerView.ViewHolder(itemView), View.OnClickListener {
+
+    private lateinit var mySearchRecyclerViewInterface: ISearchHistoryRecyclerView
 
     // 뷰 가져오기
     private val searchItemTextView = itemView.search_term_text
@@ -17,9 +19,11 @@ class SearchItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), V
     private val constraintSearchItem = itemView.constraint_search_item
 
     init {
+        Log.d(TAG, "SearchItemViewHolder - init() called ")
         // onClick() 리스너 연결 처리
         deleteSearchBtn.setOnClickListener(this)
         constraintSearchItem.setOnClickListener(this)
+        this.mySearchRecyclerViewInterface = searchRecyclerViewInterface
     }
 
     // 데이터와 뷰를 묶는다.
@@ -35,9 +39,11 @@ class SearchItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView), V
         when(view){
             deleteSearchBtn -> {
                 Log.d(TAG, "SearchItemViewHolder -  검색 삭제 버튼 클릭")
+                this.mySearchRecyclerViewInterface.onSearchItemDeleteClicked(adapterPosition)
             }
             constraintSearchItem -> {
                 Log.d(TAG, "SearchItemViewHolder -  검색 아이템 클릭")
+                this.mySearchRecyclerViewInterface.onSearchItemClicked(adapterPosition)
             }
         }
     }

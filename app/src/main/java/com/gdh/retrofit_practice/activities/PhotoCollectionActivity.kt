@@ -87,7 +87,7 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
    private fun searchHistoryRecyclerViewSetting(searchHistoryList: ArrayList<SearchData>){
         Log.d(TAG, "PhotoCollectionActivity - searchHistoryRecyclerViewSetting() called ")
 
-        this.mySearchHistoryRecyclerViewAdapter = SearchHistoryRecyclerViewAdapter()
+        this.mySearchHistoryRecyclerViewAdapter = SearchHistoryRecyclerViewAdapter(this)
         this.mySearchHistoryRecyclerViewAdapter.submitList(searchHistoryList)
 
         val myLinearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
@@ -205,14 +205,14 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
 
     // 검색 아이템 삭제 버튼 이벤트
     override fun onSearchItemDeleteClicked(position: Int) {
-        Log.d(TAG, "PhotoCollectionActivity - onSearchItemDeleteClicked() called ")
+        Log.d(TAG, "PhotoCollectionActivity - onSearchItemDeleteClicked() called / position: $position")
         //TODO:: 해당 번째 아이템을 삭제
         //TODO:: 다시 저장
     }
 
     // 검색 아이템 버튼 이벤트
     override fun onSearchItemClicked(position: Int) {
-        Log.d(TAG, "PhotoCollectionActivity - onSearchItemClicked() called ")
+        Log.d(TAG, "PhotoCollectionActivity - onSearchItemClicked() called / position: $position")
         //TODO:: 해당 번째 아이템의 검색어로 API 호출
     }
 }
