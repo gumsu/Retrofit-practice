@@ -206,8 +206,12 @@ class PhotoCollectionActivity: AppCompatActivity(), SearchView.OnQueryTextListen
     // 검색 아이템 삭제 버튼 이벤트
     override fun onSearchItemDeleteClicked(position: Int) {
         Log.d(TAG, "PhotoCollectionActivity - onSearchItemDeleteClicked() called / position: $position")
-        //TODO:: 해당 번째 아이템을 삭제
-        //TODO:: 다시 저장
+        // 해당 요소 삭제
+        this.searchHistoryList.removeAt(position)
+        // 데이터 덮어쓰기
+        SharedPrefManager.storeSearchHistoryList(this.searchHistoryList)
+        // 데이터 변경 됐다고 알려준다.
+        this.mySearchHistoryRecyclerViewAdapter.notifyDataSetChanged()
     }
 
     // 검색 아이템 버튼 이벤트
